@@ -1,0 +1,55 @@
+import time
+
+def print_slow(text):
+    for char in text:
+        print(char, end='', flush=True)
+        time.sleep(0.05)
+    print()
+
+def intro():
+    print_slow("You find yourself in a dark, mysterious forest...")
+    print_slow("The trees loom overhead, and the path ahead is unclear.")
+    print_slow("What will you do?")
+
+def choice1():
+    print_slow("You can either 'explore' the forest or 'wait' for something to happen.")
+    action = input("> ").lower()
+    if action == "explore":
+        print_slow("You venture deeper into the forest.")
+        choice2()
+    elif action == "wait":
+        print_slow("You stand still, listening to the sounds of the forest.")
+        choice1()
+    else:
+        print_slow("I didn't understand that. Please try again.")
+        choice1()
+
+def choice2():
+    print_slow("You come across a fork in the path. Do you go 'left' or 'right'?")
+    action = input("> ").lower()
+    if action == "left":
+        print_slow("You follow the left path and find a beautiful meadow.")
+        print_slow("Congratulations, you have found the way out of the forest!")
+    elif action == "right":
+        print_slow("You follow the right path and stumble upon a dangerous-looking cave.")
+        print_slow("Do you 'enter' the cave or 'turn back'?")
+        action = input("> ").lower()
+        if action == "enter":
+            print_slow("You cautiously enter the cave and find a hidden treasure!")
+            print_slow("Well done, you have completed the adventure!")
+        elif action == "turn back":
+            print_slow("You decide it's best to turn back and find another way.")
+            choice2()
+        else:
+            print_slow("I didn't understand that. Please try again.")
+            choice2()
+    else:
+        print_slow("I didn't understand that. Please try again.")
+        choice2()
+
+def main():
+    intro()
+    choice1()
+
+if __name__ == "__main__":
+    main()
