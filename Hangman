@@ -1,0 +1,120 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <fstream>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+// Function to read a random word from a file
+string getRandomWord(const string& filename) {
+    ifstream file(filename);
+    if (!file.is_open()) {
+        cerr << "Error opening file: " << filename << endl;
+        return "";
+    }
+
+    vector<string> words;
+    string word;
+    while (file >> word) {
+        words.push_back(word);
+    }
+    file.close();
+
+    srand(static_cast<unsigned int>(time(NULL)));
+    int randomIndex = rand() % words.size();
+    return words[randomIndex];
+}
+
+// Function to display the current state of the game
+void displayGame(const string& word, const vector<char>& guessedLetters) {
+    for (char c : word) {
+        bool found = false;
+        for (char g : guessedLetters) {
+            if (c == g) {
+                cout << c << " ";
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            cout << "_ ";
+        }
+    }
+    cout << endl;
+}
+
+int main() {
+    string wordFilename = "words.txt";
+    string word = getRandomWord(wordFilename);
+    vector<char> guessedLetters;
+    int wrongGuesses = 0;
+    const int maxWrongGuesses = 6;
+
+    while (true) {
+        system("cls");  // Clear the screen
+        cout << "Hangman Game" << endl;
+        cout << "Word: ";
+        displayGame(word, guessedLetters);
+        cout << "Incorrect guesses: " << wrongGuesses << "/" << maxWrongGuesses << endl;
+
+        if (wrongGuesses >= maxWrongGuesses) {
+            cout << "You lose! The word was: " << word << endl;
+            break;
+        }
+
+        char guess;
+        cout << "Guess a letter: ";
+        cin >> guess;
+
+        bool found = false;
+        for (char c : guessedLetters) {
+            if (guess == c) {
+                cout << "You already guessed that letter." << endl;
+                found = true;
+                break;
+            }
+        }
+        if (found) {
+            continue;
+        }
+
+        guessedLetters.push_back(guess);
+        bool correctGuess = false;
+        for (char c : word) {
+            if (guess == c) {
+                correctGuess = true;
+                break;
+            }
+        }
+
+        if (!correctGuess) {
+            wrongGuesses++;
+        }
+
+        bool won = true;
+        for (char c : word) {
+            bool found = false;
+            for (char g : guessedLetters) {
+                if (c == g) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                won = false;
+                break;
+            }
+        }
+
+        if (won) {
+            cout << "Congratulations, you win! The word was: " << word << endl;
+            break;
+        }
+
+        system("pause");
+    }
+
+    return 0;
+}
